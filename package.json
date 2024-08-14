@@ -1,0 +1,326 @@
+{
+  "name": "starchat",
+  "displayName": "Starchat: write and improve code using AI",
+  "description": "Use Starchat right inside the IDE to enhance and automate your coding with AI-powered assistance (unofficial)",
+  "version": "1.0.3",
+  "publisher": "cyteon",
+  "icon": "resources/extensionIcon.png",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/cyteon/starchat-vscode"
+  },
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": [
+    "Machine Learning"
+  ],
+  "keywords": [
+    "huggingface",
+    "starchat",
+    "chatgpt",
+    "copilot",
+    "ai",
+    "explain",
+    "find bugs",
+    "explain ",
+    "refactor"
+  ],
+  "activationEvents": [
+    "onCommand:starchat.ask"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "starchat.explain",
+        "title": "Starchat: Explain selection"
+      },
+      {
+        "command": "starchat.complete",
+        "title": "Starchat: Complete selection"
+      },
+      {
+        "command": "starchat.refactor",
+        "title": "Starchat: Refactor selection"
+      },
+      {
+        "command": "starchat.findProblems",
+        "title": "Starchat: Find problems"
+      },
+      {
+        "command": "starchat.optimize",
+        "title": "Starchat: Optimize selection"
+      },
+      {
+        "command": "starchat.clean",
+        "title": "Starchat: Clean code "
+      },
+      {
+        "command": "starchat.documentation",
+        "title": "Starchat: Write documentation"
+      },
+      {
+        "command": "starchat.writeComments",
+        "title": "Starchat: Write comments"
+      },
+      {
+        "command": "starchat.writeTests",
+        "title": "Starchat: Write tests "
+      },
+      {
+        "command": "starchat.resetConversation",
+        "title": "Reset Starchat conversation"
+      },
+      {
+        "command": "starchat.tryAgain",
+        "title": "Retry Starchat request"
+      }
+    ],
+    "configuration": {
+      "title": "Starchat",
+      "type": "object",
+      "properties": {
+        "starchat.apiKey": {
+          "markdownDescription": "Huggingface access token from [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)",
+          "type": "string",
+          "order": 0
+        },
+        "starchat.apiUrl": {
+          "markdownDescription": "Huggingface Starchat API URL or other custom API URL. Defaults to [https://api-inference.huggingface.co/models/HuggingFaceH4/starchat-beta](https://api-inference.huggingface.co/models/HuggingFaceH4/starchat-beta)",
+          "type": "string",
+          "default": "https://api-inference.huggingface.co/models/HuggingFaceH4/starchat-beta",
+          "order": 1
+        },
+        "starchat.promptPrefix.explain": {
+          "type": "string",
+          "default": "Explain what this code does: ",
+          "description": "The prompt prefix used for explaining the selected code",
+          "order": 2
+        },
+        "starchat.promptPrefix.complete": {
+          "type": "string",
+          "default": "Complete this code: ",
+          "description": "The prompt prefix used for completing the selected code",
+          "order": 3
+        },
+        "starchat.promptPrefix.refactor": {
+          "type": "string",
+          "default": "Refactor this code and explain what's changed: ",
+          "description": "The prompt prefix used for refactoring the selected code",
+          "order": 4
+        },
+        "starchat.promptPrefix.findProblems": {
+          "type": "string",
+          "default": "Find problems with the following code, fix them and explain what was wrong (Do not change anything else, if there are no problems say so): ",
+          "description": "The prompt prefix used for finding problems in the selected code",
+          "order": 5
+        },
+        "starchat.promptPrefix.documentation": {
+          "type": "string",
+          "default": "Write documentation for the following code: ",
+          "description": "The prompt prefix used for writing documentation for the selected code",
+          "order": 6
+        },
+        "starchat.promptPrefix.writeComments": {
+          "type": "string",
+          "default": "Write comments for the following code: ",
+          "description": "The prompt prefix used for writing comments for the selected code",
+          "order": 7
+        },
+        "starchat.promptPrefix.writeTests": {
+          "type": "string",
+          "default": "Write tests for the following code: ",
+          "description": "The prompt prefix used for writing tests for the selected code",
+          "order": 8
+        },
+        "starchat.promptPrefix.optimize": {
+          "type": "string",
+          "default": "Optimize the following code if there is anything to improve, if not say so: ",
+          "description": "The prompt prefix used for optimizing the selected code",
+          "order": 9
+        },
+        "starchat.promptPrefix.clean": {
+          "type": "string",
+          "default": "Clean up the following code: ",
+          "description": "The prompt prefix used for cleaning the selected code",
+          "order": 10
+        },
+        "starchat.maxNewTokens": {
+          "type": "number",
+          "default": 1024,
+          "description": "The amount of new tokens to be generated, this does not include the input length it is a estimate of the size of generated text you want. Each new tokens slows down the request, so look for balance between response times and length of text generated.",
+          "order": 11
+        },
+        "starchat.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "description": "The temperature of the sampling operation. 1 means regular sampling, 0 means always take the highest score, 100.0 is getting closer to uniform probability.",
+          "order": 12
+        },
+        "starchat.topK": {
+          "type": "number",
+          "default": 50,
+          "description": "Integer to define the top tokens considered within the sample operation to create new text",
+          "order": 13
+        },
+        "starchat.topP": {
+          "type": "number",
+          "default": 0.95,
+          "description": "Float to define the tokens that are within the sample operation of text generation. Add tokens in the sample for more probable to least probable until the sum of the probabilities is greater than top_p.",
+          "order": 14
+        }
+      }
+    },
+    "submenus": [
+      {
+        "id": "starchat",
+        "label": "Starchat"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "starchat"
+        }
+      ],
+      "starchat": [
+        {
+          "command": "starchat.explain",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@2"
+        },
+        {
+          "command": "starchat.complete",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@3"
+        },
+        {
+          "command": "starchat.refactor",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@4"
+        },
+        {
+          "command": "starchat.findProblems",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@5"
+        },
+        {
+          "command": "starchat.optimize",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@6"
+        },
+        {
+          "command": "starchat.clean",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@7"
+        },
+        {
+          "command": "starchat.documentation",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@8"
+        },
+        {
+          "command": "starchat.writeComments",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@9"
+        },
+        {
+          "command": "starchat.writeTests",
+          "when": "editorHasSelection",
+          "group": "starchat-menu-group@10"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "starchat.explain",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.complete",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.refactor",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.findProblems",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.optimize",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.clean",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.documentation",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.writeComments",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "starchat.resetConversation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "starchat",
+          "title": "Starchat",
+          "icon": "resources/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "starchat": [
+        {
+          "type": "webview",
+          "id": "starchat.chatView",
+          "name": "Starchat"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run package",
+    "compile": "webpack",
+    "watch": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.js --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "vsce": "yarn run vscode:prepublish && vsce package",
+    "compile-tests": "tsc -p . --outDir dist",
+    "watch-tests": "tsc -p . -w --outDir dist",
+    "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test-vscode": "vscode-test",
+    "update-package-lock": "npm install --package-lock-only"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.6",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.9.5",
+    "webpack": "^5.87.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "@huggingface/inference": "^2.5.2",
+    "node-fetch-polyfill": "^2.0.6"
+  }
+}
